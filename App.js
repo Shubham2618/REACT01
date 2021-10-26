@@ -1,83 +1,52 @@
 import './App.css';
-import Header from "./MyComponents/Header";
-import { Todos } from "./MyComponents/Todos";
-import { Footer } from "./MyComponents/Footer";
-import { AddTodo } from "./MyComponents/AddTodo";
-import { About } from "./MyComponents/About";
+import { products } from "./products";
+import { AddProduct } from "./AddProduct";
+import { login } from './login';
 import React, { useState, useEffect } from 'react';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route
-} from "react-router-dom";
+import { productItem } from './productItem';
 
 function App() {
-  let initTodo;
-  if (localStorage.getItem("todos") === null) {
-    initTodo = [];
+  let initproducts;
+  if (localStorage.getItem("products") === null) {
+    initproducts = [];
   }
-  else {
-    initTodo = JSON.parse(localStorage.getItem("todos"));
+  else{
+    initproducts = JSON.parse(localStorage.getItem("products"));
   }
 
-
-  const onDelete = (todo) => {
-    console.log("I am ondelete of todo", todo);
-    // Deleting this way in react does not work
-    // let index = todos.indexOf(todo);
-    // todos.splice(index, 1);
-
-    setTodos(todos.filter((e) => {
-      return e !== todo;
+  const onDelete = (products) => {
+    setproducts(products.filter((e) => {
+      return e !== products;
     }));
-    console.log("deleted", todos)
-    localStorage.setItem("todos", JSON.stringify(todos));
+    console.log("deleted", products)
+    localStorage.setItem("products", JSON.stringify(products));
   }
 
-  const addTodo = (title, desc) => {
-    console.log("I am adding this todo", title, desc)
+  const addProduct = (title, desc) => {
+    console.log("I am adding this products", title, desc)
     let sno;
-    if (todos.length === 0) {
+    if (products.length === 0) {
       sno = 0;
     }
     else {
-      sno = todos[todos.length - 1].sno + 1;
+      sno = products [products.length - 1].sno + 1;
     }
-    const myTodo = {
+    const myproducts = {
       sno: sno,
       title: title,
       desc: desc,
     }
-    setTodos([...todos, myTodo]);
-    console.log(myTodo);
+    
+     setproducts([...products, myproducts]);
+    console.log(myproducts);
   }
 
-  const [todos, setTodos] = useState(initTodo);
+  const [products, setproducts] = useState( initproducts);
   useEffect(() => {
-    localStorage.setItem("todos", JSON.stringify(todos));
-  }, [todos])
+    localStorage.setItem("products", JSON.stringify(products));
+  }, [products])
 
-  return ( 
-    <> 
-    <Router>
-      <Header title="My Todos List" searchBar={false} /> 
-      <Switch>
-          <Route exact path="/" render={()=>{
-            return(
-            <>
-            <AddTodo addTodo={addTodo} />
-            <Todos todos={todos} onDelete={onDelete} /> 
-            </>)
-          }}> 
-          </Route>
-          <Route exact path="/about">
-            <About />
-          </Route> 
-        </Switch> 
-      <Footer />
-    </Router>
-    </>
-  );
+
 }
 
 export default App;
